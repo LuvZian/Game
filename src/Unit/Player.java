@@ -6,6 +6,10 @@ public class Player extends Unit{
         super(id, name, power, defense, HP, MP, speed);
     }
 
+    public Player() {
+        //TODO Auto-generated constructor stub
+    }
+
     public boolean run(){
         if(Math.random()<=0.7){
             return true;
@@ -14,7 +18,7 @@ public class Player extends Unit{
         }
     }
 
-    public void Infoplayer(Player player) {
+    public void Info(Player player) {
         System.out.println("이름 : "+player.name);
         System.out.println("공격력 : "+player.power);
         System.out.println("방어력 : "+player.defense);

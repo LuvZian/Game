@@ -48,13 +48,13 @@ public class Unit {
             System.out.println(defender + "의 남은 체력 :  " + HP);
             dl.Sleep();
             System.out.println(defender + "을 쓰러트렸습니다!");
-            System.out.println("\n");
+            System.out.println("------------------------------------------------------------");
         }else{
             System.out.println(attacker + "가 " + damage + "의 데미지를 입혔다.");
             dl.Sleep();
             HP = HP - damage;
             System.out.println(defender + "의 남은 체력 :  " + HP);
-            System.out.println("\n");
+            System.out.println("------------------------------------------------------------");
         }
         return HP;
     }

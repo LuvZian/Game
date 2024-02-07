@@ -1,5 +1,4 @@
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
@@ -26,6 +25,7 @@ public class Battle{
 
     public Battle(){
         this.monsters = new Monster();
+        this.player = new Player();
     }
 
     public void appear(){ // 몬스터 출현
@@ -90,7 +90,7 @@ public class Battle{
           if(1<=choice && choice <=randmonsters){
               selectedMonsterIndex = appearmonster[choice-1]; // 정보확인을 원하는 몬스터
               monsters.Info(selectedMonsterIndex);
-        }
+            }
     }
     public void PartyInfo(){
         for(int i = 0; i < GM.selectedplayer.length;i++){
@@ -99,19 +99,19 @@ public class Battle{
             }else{
                 System.out.println((i+1)+". " + GM.selectedplayer[i].name);
             }
+        }
             int choice = sc.nextInt();
             if(1<=choice && choice<=GM.selectedplayer.length){
                 targetplayerIndex = GM.selectedplayer[choice-1];
-                player.Infoplayer(targetplayerIndex);
+                player.Info(targetplayerIndex);
             }
-        }
     }
 
     public void fight_start(){
         System.out.println("-전투 시작-");
         dl.Sleep();
-        System.out.println( "====Round" + round + "====");
         appear();// 몬스터 등장
+        System.out.println( "====Round" + round + "====");
     }
 
     public void fight_end() throws Exception{
@@ -186,6 +186,7 @@ public class Battle{
                 }
             }
             round++;
+            System.out.println( "====Round" + round + "====");
         }
     }
 
@@ -232,6 +233,7 @@ public class Battle{
                                 break;
                             }
                     case 4 : System.out.println("누구의 정보를 확인할까요?"); // 정보확인
+                            currentUnit.turn=true;
                             dl.Sleep();
                             System.out.println("1. 파티원");
                             dl.Sleep();
@@ -247,6 +249,7 @@ public class Battle{
                             }
                         break;
                     default:    System.out.println("잘못된 선택지입니다!");
+                                
                             break;
                     }
                 } catch (InputMismatchException e) {
