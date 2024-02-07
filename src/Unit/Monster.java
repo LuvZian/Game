@@ -1,27 +1,10 @@
 
 package Unit;
 
-import etc.*;
-
-
-public class Monster {
-    Delay dl = new Delay();
-
-    public String id;
-    public String name;
-    public int power;
-    public int defense;
-    public int HP;
-    public int speed;
-    public Boolean turn = true;
+public class Monster extends Unit{
 
     public Monster(String id, String name, int power, int defense, int HP, int speed){
-        this.id = id;
-        this.name = name;
-        this.power = power;
-        this.defense = defense;
-        this.HP = HP;
-        this.speed = speed;
+        super(id, name, power, defense, HP, 0, speed);
     }
 
     public Monster() {

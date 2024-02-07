@@ -1,30 +1,9 @@
 package Unit;
 
-import etc.Delay;
-
-public class Player {
-    Delay dl = new Delay();
-
-    public String id;
-    public String name;
-    public int power;
-    public int defense;   
-    public int HP;
-    public int MP;
-    public int speed;
-    public Boolean turn = true;    
+public class Player extends Unit{
 
     public Player(String id, String name, int power, int defense, int HP, int MP, int speed){
-        this.id = id;
-        this.name = name;
-        this.power = power;
-        this.defense = defense;
-        this.HP = HP;
-        this.MP = MP;
-        this.speed = speed;
-    }
-
-    public Player() {
+        super(id, name, power, defense, HP, MP, speed);
     }
 
     public boolean run(){

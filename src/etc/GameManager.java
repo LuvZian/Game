@@ -1,5 +1,4 @@
 package etc;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -9,16 +8,22 @@ import java.sql.Statement;
 import Unit.Monster;
 import Unit.Player;
 
-public class Database {
-    public Connection con;
-    Delay dl = new Delay();
+public class GameManager {
+    private GameManager(){}
 
+    private static class GameManagerHolder{
+        private static final GameManager INSTANCE = new GameManager();
+    }
+    public static GameManager getInstance(){
+        return GameManagerHolder.INSTANCE;
+    }
+
+    Connection con;
+    public int monster_count;
     public Monster monsterlist[];
     public Monster monsters;
-    public int monster_count;
-
     public Player playerlist[];
-
+    public Player[] selectedplayer;
 
     public void connect(){ //DB 연결
         String url = "jdbc:mysql://127.0.0.1:3306/game_db";
@@ -37,7 +42,7 @@ public class Database {
             e.printStackTrace();
         }
     }
-    
+
     public void close(){
         try {
             if(con != null){
@@ -68,7 +73,7 @@ public class Database {
         return monsterlist;
     }
 
-    public void getCharacter() throws Exception{ //캐릭터 데이터 
+    public Player[] getCharacter() throws Exception{ //캐릭터 데이터 
         Statement stmt = con.createStatement();
 
         String count = "Select Count(CharacterId) From character_db"; // database에 저장된 캐릭터 수
@@ -84,5 +89,7 @@ public class Database {
             rs.next();
             playerlist[i] = new Player(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getInt(6), rs.getInt(7));
         }
+        return playerlist;
     }
+
 }

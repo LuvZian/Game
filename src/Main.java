@@ -1,24 +1,21 @@
 import Unit.Party;
-import etc.Database;
+import etc.GameManager;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        
-        Database db = new Database();
+        GameManager GM = GameManager.getInstance();
         Start st = new Start();
-        Party pt = new Party(db);
-        Battle bt = new Battle(db);
+        Party pt = new Party();
+        Battle bt = new Battle();
 
-        db.connect();
-        db.getMonster();
-        db.getCharacter();
-        db.close();
+        GM.connect();
+        GM.getMonster();
+        GM.getCharacter();
+        GM.close();
         
         st.New();
         pt.Member();
-        bt.fight_start();
-        bt.fight();
-        bt.fight_end();
+        bt.battlefight();
         
         
     }
