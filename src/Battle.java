@@ -18,7 +18,6 @@ public class Battle{
     Unit unit = new Unit();
     Skill sk = new Skill();
     Start st = new Start();
-    Main mn = new Main();
     Monster monsters;
     Player player;
     int round = 1;

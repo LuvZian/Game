@@ -16,6 +16,7 @@ public class Monster extends Unit{
         super(id, name, power, defense, HP, 0, speed);
     }
 
+
     public void Info(Monster monster) {
         System.out.println("● 이름 : "+monster.name);
         System.out.println("● 공격력 : "+monster.power);
