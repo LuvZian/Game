@@ -9,7 +9,7 @@ public class Party {
     Scanner sc= new Scanner(System.in);
     Delay dl = new Delay();
     int member = 0;
-    int maxmemeber = 3;
+    public int maxmemeber = 3;
     
     
     public Party(){
@@ -23,6 +23,7 @@ public class Party {
                 System.out.println(j+1 + ". " + GM.playerlist[j].name);
             }
             try {
+                System.out.print(">> ");
                 int choice = sc.nextInt();
                 if(choice <= GM.playerlist.length){
                     GM.selectedplayer[member] = new Player(GM.playerlist[choice-1].id, GM.playerlist[choice-1].name, GM.playerlist[choice-1].power, GM.playerlist[choice-1].defense, GM.playerlist[choice-1].HP, GM.playerlist[choice-1].MP, GM.playerlist[choice-1].speed);
@@ -47,6 +48,7 @@ public class Party {
         for (int i = 0; i<member;i++){
             System.out.println(i+1 + ". " + GM.selectedplayer[i].name);
         }
+        System.out.println("------------------------------------------------------------");
     }
 
 }
