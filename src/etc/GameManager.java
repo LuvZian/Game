@@ -68,7 +68,7 @@ public class GameManager {
         monsterlist = new Monster[monster_count];
         for(int i = 0; i<monsterlist.length; i++){
             rs.next();
-            monsterlist[i] = new Monster(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5),rs.getInt(6));
+            monsterlist[i] = new Monster(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5),rs.getInt(6),rs.getString(7));
         }
         return monsterlist;
     }
@@ -91,7 +91,7 @@ public class GameManager {
             skilllist = new Skill[skill_count];
             for(int i = 0;i<skill_count;i++){
                 rsskill.next();
-                skilllist[i] = new Skill(rsskill.getString(1), rsskill.getString(2), rsskill.getInt(3), rsskill.getInt(4));
+                skilllist[i] = new Skill(rsskill.getString(1), rsskill.getString(2), rsskill.getInt(3), rsskill.getInt(4), rsskill.getString(5));
             }
             
             return skilllist;

@@ -16,16 +16,20 @@ public class Skill {
     public String name;
     public int power;
     public int mp;
+    public String nature;
     public Skill selectedSkill;
+
+    int damage = 0;
     
     public Skill(){
     }
 
-    public Skill(String id, String name, int power, int mp) {
+    public Skill(String id, String name, int power, int mp, String nature) {
         this.id=  id;
         this.name= name;
         this.power= power;
         this.mp= mp;
+        this.nature = nature;
     }
     
     public void SkillInfo(Player player) throws Exception{
@@ -35,6 +39,7 @@ public class Skill {
             System.out.println("● 이름 : "+skills[i].name);
             System.out.println("● 공격력 : "+skills[i].power);
             System.out.println("● MP : "+skills[i].mp);
+            System.out.println("● 속성 : "+skills[i].nature);
         }
     }
 
@@ -55,7 +60,8 @@ public class Skill {
     public int skillattack(Player player, Monster monster){
         System.out.println(player.name + "가 "+ monster.name+"에게 "+selectedSkill.name+ "을 사용했다!");
         dl.Sleep();
-        if(selectedSkill.power >= monster.HP){
+            damage = selectedSkill.power-monster.defense;
+        if(damage >= monster.HP){
             System.out.println(player.name + "가 " + monster.HP + "의 데미지를 입혔다.");
             monster.HP = 0;
             dl.Sleep();
@@ -63,16 +69,22 @@ public class Skill {
             dl.Sleep();
             System.out.println(monster.name + "을 쓰러트렸습니다!");
             System.out.println("------------------------------------------------------------");
-        }else if(selectedSkill.power-monster.defense<=0){
+        }else if(damage<=0){
             System.out.println(player.name+"은 "+monster.name+"에게 흠집도 내지 못했다!");
         }
         else{
-            System.out.println(player.name + "가 " + (selectedSkill.power-monster.defense) + "의 데미지를 입혔다.");
+            System.out.println(player.name + "가 " + damage + "의 데미지를 입혔다.");
             dl.Sleep();
-            monster.HP = monster.HP - selectedSkill.power;
+            monster.HP = monster.HP - damage;
             System.out.println(monster.name + "의 남은 체력 :  " + monster.HP);
             System.out.println("------------------------------------------------------------");
         }
         return monster.HP;
     }
+    public int restmp(Player player){
+        player.MP = player.MP-selectedSkill.mp;
+        return player.MP;
+    }
+
+
 }

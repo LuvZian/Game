@@ -6,6 +6,7 @@ public class Player extends Unit{
     public Skill[] skills;
     public Player targetplayerIndex;
     Scanner sc = new Scanner(System.in);
+    Skill sk = new Skill();
 
     public Player() {
     }
@@ -30,16 +31,14 @@ public class Player extends Unit{
     }
 
     public void Info(Player player) throws Exception {
-        Skill[] skills = GM.getskill(player.id);
+        System.out.println("===유닛 정보===");
         System.out.println("● 이름 : "+player.name);
         System.out.println("● 공격력 : "+player.power);
         System.out.println("● 방어력 : "+player.defense);
         System.out.println("● 체력 : "+player.HP);
         System.out.println("● 마나 : "+player.MP);
         System.out.println("● 속도 : "+player.speed);
-        for( int i = 0; i<GM.skill_count;i++){
-            System.out.println("● 스킬"+(i+1)+" : "+skills[i].name);
-        }
+            sk.SkillInfo(player);
     }
 
     public void PartyInfo() throws Exception{ //  파티원 정보

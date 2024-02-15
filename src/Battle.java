@@ -29,8 +29,6 @@ public class Battle{
         this.player = new Player();
     }
 
-    
-
     public boolean win() {
         for (int i = 0; i < monsters.randmonsters; i++) {
             if (monsters.appearmonster[i].HP > 0) // 하나의 몬스터라도 체력이 0 초과인 경우
@@ -111,7 +109,7 @@ public class Battle{
         Player currentPlayer = null;
         int i = 0;
         while(i!=speedlist.size()){
-            Unit unit = speedlist.get(i);
+            Unit unit = speedlist.get(i); //filter
             if(unit instanceof Monster && unit.HP>0 && unit.turn){
                 unit.turn = false;
                 currentMonster = (Monster) unit;
@@ -153,7 +151,8 @@ public class Battle{
             }else{ // 살아있는 몬스터 선택 시
                 currentPlayer.focus(monsters.selectedMonsterIndex.name); 
                 dl.Sleep();
-                monsters.selectedMonsterIndex.HP = sk.skillattack(currentPlayer, monsters.selectedMonsterIndex); 
+                monsters.selectedMonsterIndex.HP = sk.skillattack(currentPlayer, monsters.selectedMonsterIndex);
+                currentPlayer.MP =sk.restmp(currentPlayer);
                 dl.Sleep();
             }
         }else{
@@ -200,7 +199,12 @@ public class Battle{
                         }
                         attackchoice(currentPlayer); // 공격할 몬스터 선택 및 공격격
                         break;
-                    case 2 : System.out.println("어떤 스킬을 사용하시겠습니까?");
+                    case 2 : if(currentPlayer.MP<40){//그 플레이어의 스킬 중 가장 낮은 MP 소모량
+                            System.out.println("마나가 부족하여 스킬을 사옹할 수 없습니다!!!");
+                            currentPlayer.turn=true;
+                            break;
+                        }else{
+                            System.out.println("어떤 스킬을 사용하시겠습니까?");
                             sk.skillchoice(currentPlayer);
                             System.out.println("누구를 공격하시겠습니까?");
                             for(int i = 0; i<monsters.randmonsters;i++){ // 몬스터 리스트 출력
@@ -211,7 +215,9 @@ public class Battle{
                                 }
                             }
                             Skillattackchoice(currentPlayer);
-                        break;
+                            break;
+                        }
+                        
                     case 3 : if(player.run()){ //도망치기
                             System.out.println("무사히 도망치셨습니다!");
                             System.exit(0);
@@ -283,7 +289,7 @@ public class Battle{
 
     public boolean Restart() throws Exception{   
             
-            System.out.println("다시 도전하시겠습니까?");
+            System.out.println("다시 시작하시겠습니까?");
             System.out.println("1. 다시 시작");
             System.out.println("2. 게임 종료");
             int choice = sc.nextInt();
