@@ -35,10 +35,10 @@ public class GameManager {
             String passwd = "1234";
 
             this.con = DriverManager.getConnection(url, user, passwd);
-            System.out.println("연결 성공");
+            Logs.log("연결 성공");
         }catch(SQLException e){
-            System.out.println("연결 실패");
-            System.out.println("사유 : "+ e.getMessage());
+            Logs.log("연결 실패");
+            Logs.log("사유 : "+ e.getMessage());
         }
     }
 

@@ -1,11 +1,13 @@
 import Unit.Party;
 import etc.GameManager;
+import etc.Logs;
 
 public class Main {
     public static void main(String[] args) throws Exception {
         GameManager GM = GameManager.getInstance();
         Battle bt = new Battle();
-        
+        Logs.check();
+
         GM.connect();
         GM.getMonster(); 
         GM.getCharacter();

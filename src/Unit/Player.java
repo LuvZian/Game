@@ -2,6 +2,8 @@ package Unit;
 
 import java.util.Scanner;
 
+import etc.Logs;
+
 public class Player extends Unit{
     public Skill[] skills;
     public Player targetplayerIndex;
@@ -31,13 +33,13 @@ public class Player extends Unit{
     }
 
     public void Info(Player player) throws Exception {
-        System.out.println("===유닛 정보===");
-        System.out.println("● 이름 : "+player.name);
-        System.out.println("● 공격력 : "+player.power);
-        System.out.println("● 방어력 : "+player.defense);
-        System.out.println("● 체력 : "+player.HP);
-        System.out.println("● 마나 : "+player.MP);
-        System.out.println("● 속도 : "+player.speed);
+        Logs.log("===+"+player.name+" 정보===");
+        Logs.log("● 이름 : "+player.name);
+        Logs.log("● 공격력 : "+player.power);
+        Logs.log("● 방어력 : "+player.defense);
+        Logs.log("● 체력 : "+player.HP);
+        Logs.log("● 마나 : "+player.MP);
+        Logs.log("● 속도 : "+player.speed);
             sk.SkillInfo(player);
     }
 

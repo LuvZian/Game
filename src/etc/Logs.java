@@ -1,58 +1,30 @@
 package etc;
-import java.util.logging.*;
-import java.io.IOException;
 
-public class Logs {
+import java.io.*;
+import java.nio.file.Files;
+
+public class Logs { // 로그 파일 저장
+    private static final String Filename_pre = "game_log";
+    private static final String Filename_exten = ".log";
+    private static final String File_seper = "_";
+    public static int FileNum = 1;
+    private static String filename = Filename_pre + File_seper + FileNum + Filename_exten;
     
-    Logger logger = Logger.getLogger("mylogger");
-    private static Logs instance = new Logs();
-
-    private FileHandler logFile = null;
-    private FileHandler warningFile = null;
-    private FileHandler fineFile = null;
-
-    public Logs(){
-        try {
-            logFile = new FileHandler("log.txt",true);
-            warningFile = new FileHandler("warning.txt", true);
-            fineFile = new FileHandler("fine.txt",true);
-        } catch (SecurityException e) {
-            e.printStackTrace();
+    public static void log(String msg) { // 로그파일 생성 및 작성
+        try{
+            Files.write(new File(filename).toPath(), (msg + "\n").getBytes(), java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND);
+            System.out.println(msg); // 콘솔 출력용
         }catch(IOException e){
-            e.printStackTrace();
+            log(e.getMessage());
         }
-        logFile.setFormatter(new SimpleFormatter());
-        warningFile.setFormatter(new SimpleFormatter());
-        fineFile.setFormatter(new SimpleFormatter());
-
-        logger.setLevel(Level.ALL);
-        warningFile.setLevel(Level.ALL);
-        fineFile.setLevel(Level.ALL);
-
-        logger.addHandler(logFile);
-        logger.addHandler(warningFile);
-        logger.addHandler(fineFile);
     }
-    
-    public static Logs getLogger(){
-        return instance;
-    }
-
-    public void log(String msg){
-        logger.finest(msg);
-        logger.finer(msg);
-        logger.fine(msg);
-        logger.config(msg);
-        logger.info(msg);
-        logger.warning(msg);
-        logger.severe(msg);
-
-    }
-
-    public void fine(String msg){
-        logger.fine(msg);
-    }
-    public void warning(String msg){
-        logger.warning(msg);
+    public static String check(){ // 파일명 중복 확인
+        File file = new File(filename);
+        while(file.exists()){
+            FileNum++;
+            filename = Filename_pre + File_seper + FileNum + Filename_exten;
+            file = new File(filename);
+        }
+        return filename;
     }
 }

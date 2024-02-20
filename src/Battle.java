@@ -10,6 +10,7 @@ import Unit.Skill;
 import Unit.Unit;
 import etc.Delay;
 import etc.GameManager;
+import etc.Logs;
 
 public class Battle{
     GameManager GM = GameManager.getInstance();
@@ -20,7 +21,7 @@ public class Battle{
     Start st = new Start();
     Monster monsters;
     Player player;
-    int round = 1;
+    
     int stage = 1;
     public boolean result = false;
 
@@ -29,7 +30,7 @@ public class Battle{
         this.player = new Player();
     }
 
-    public boolean win() {
+    public boolean win() {  // 승리조건
         for (int i = 0; i < monsters.randmonsters; i++) {
             if (monsters.appearmonster[i].HP > 0) // 하나의 몬스터라도 체력이 0 초과인 경우
                 return false; // 아직 플레이어의 승리는 아님
@@ -37,7 +38,7 @@ public class Battle{
         return true; // 모든 몬스터가 죽었을 때 플레이어의 승리
     }
     
-    public boolean lose(){
+    public boolean lose(){ // 패배조건
         for(int i = 0;i<GM.selectedplayer.length;i++){
             if(GM.selectedplayer[i].HP > 0)
                 return false;
@@ -46,19 +47,19 @@ public class Battle{
     }
 
     public void fight_start(){
-        System.out.println("-전투 시작-");
+        Logs.log("-전투 시작-");
         dl.Sleep();
-        System.out.println("=== "+stage+" Stage ===");
+        Logs.log("=== "+stage+" Stage ===");
         monsters.appear();// 몬스터 등장
         
     }
 
     public void fight_end() throws Exception{
-        System.out.println("전투 종료! 수고하셨습니다!");
+        Logs.log("전투 종료! 수고하셨습니다!");
         if(win()==true){
-            System.out.println("플레이어의 승리!");
+            Logs.log("플레이어의 승리!");
         }else if(lose()==true){
-            System.out.println("플레이어의 패배,,,");
+            Logs.log("플레이어의 패배,,,");
         }
     }
 
@@ -68,17 +69,17 @@ public class Battle{
         if(1<=choice && choice<=monsters.randmonsters){
             monsters.selectedMonsterIndex = monsters.appearmonster[choice-1]; // 선택된 몬스터
             if(monsters.selectedMonsterIndex.HP <=0){ // hp가 0인 몬스터 선택 시
-                System.out.println("이미 죽은 몬스터입니다!");
+                Logs.log("이미 죽은 몬스터입니다!");
                 currentPlayer.turn=true;
                 dl.Sleep();
             }else{ // 살아있는 몬스터 선택 시
                 unit.focus(monsters.selectedMonsterIndex.name); 
                 dl.Sleep();
-                monsters.selectedMonsterIndex.HP = unit.attack(currentPlayer.name, monsters.selectedMonsterIndex.name, currentPlayer.power-monsters.selectedMonsterIndex.defense, monsters.selectedMonsterIndex.HP); 
+                monsters.selectedMonsterIndex.HP = unit.normalattack(currentPlayer,monsters.selectedMonsterIndex); 
                 dl.Sleep();
             }
         }else{
-            System.out.println("거긴 몬스터가 없어요!"); // 선택지 외를 입력시
+            Logs.log("거긴 몬스터가 없어요!"); // 선택지 외를 입력시
             currentPlayer.turn=true;
             dl.Sleep();
         }
@@ -109,17 +110,17 @@ public class Battle{
         Player currentPlayer = null;
         int i = 0;
         while(i!=speedlist.size()){
-            Unit unit = speedlist.get(i); //filter
+            Unit unit = speedlist.get(i); 
             if(unit instanceof Monster && unit.HP>0 && unit.turn){
                 unit.turn = false;
                 currentMonster = (Monster) unit;
-                System.out.println(currentMonster.name+"의 턴입니다!");
+                Logs.log(currentMonster.name+"의 턴입니다!");
                 MonsterAttack(currentMonster);
                 break;
             } else if (unit instanceof Player && unit.HP > 0 && unit.turn){
                 unit.turn = false;
                 currentPlayer = (Player) unit;
-                System.out.println(currentPlayer.name+"의 턴입니다!"); 
+                Logs.log(currentPlayer.name+"의 턴입니다!"); 
                 try {
                     PlayerAttack(currentPlayer);
                 } catch (Exception e) {
@@ -145,7 +146,7 @@ public class Battle{
         if(1<=choice && choice<=monsters.randmonsters){
             monsters.selectedMonsterIndex = monsters.appearmonster[choice-1]; // 선택된 몬스터
             if(monsters.selectedMonsterIndex.HP <=0){ // hp가 0인 몬스터 선택 시
-                System.out.println("이미 죽은 몬스터입니다!");
+                Logs.log("이미 죽은 몬스터입니다!");
                 currentPlayer.turn=true;
                 dl.Sleep();
             }else{ // 살아있는 몬스터 선택 시
@@ -156,7 +157,7 @@ public class Battle{
                 dl.Sleep();
             }
         }else{
-            System.out.println("거긴 몬스터가 없어요!"); // 선택지 외를 입력시
+            Logs.log("거긴 몬스터가 없어요!"); // 선택지 외를 입력시
             currentPlayer.turn=true;
             dl.Sleep();
         }
@@ -166,13 +167,13 @@ public class Battle{
         int randomplayer =(int)(Math.random()*GM.selectedplayer.length);
         player.targetplayerIndex = GM.selectedplayer[randomplayer];
         if(player.targetplayerIndex.HP <=0){
-            System.out.println(currentMonster.name+"가 실수했다!");
+            Logs.log(currentMonster.name+"가 실수했다!");
             dl.Sleep();
-            System.out.println("----------------------------------------------------------  --");
+            Logs.log("----------------------------------------------------------  --");
         }else{
             currentMonster.focus(player.targetplayerIndex.name);
             dl.Sleep();
-            player.targetplayerIndex.HP = unit.attack(currentMonster.name, player.targetplayerIndex.name, currentMonster.power-player.targetplayerIndex.defense, player.targetplayerIndex.HP);
+            player.targetplayerIndex.HP = unit.normalattack(currentMonster, player.targetplayerIndex);
             dl.Sleep();
         }
     }
@@ -180,7 +181,7 @@ public class Battle{
     
 
     public void PlayerAttack(Player currentPlayer) throws Exception{
-            System.out.println("어떤 행동을 취할까요?");
+            Logs.log("어떤 행동을 취할까요?");
             System.out.println("1. 일반 공격");
             System.out.println("2. 스킬 사용");
             System.out.println("3. 도망");
@@ -189,7 +190,7 @@ public class Battle{
                 System.out.print(">> ");
                 int move = sc.nextInt(); // 행동 선택
                 switch(move){
-                    case 1 : System.out.println("누구를 공격하시겠습니까?"); // 일반공격
+                    case 1 : Logs.log("누구를 공격하시겠습니까?"); // 일반공격
                         for(int i = 0; i<monsters.randmonsters;i++){ // 몬스터 리스트 출력
                             if(monsters.appearmonster[i].HP<=0){
                                 System.out.println("-- 사망 --");
@@ -200,13 +201,13 @@ public class Battle{
                         attackchoice(currentPlayer); // 공격할 몬스터 선택 및 공격격
                         break;
                     case 2 : if(currentPlayer.MP<40){//그 플레이어의 스킬 중 가장 낮은 MP 소모량
-                            System.out.println("마나가 부족하여 스킬을 사옹할 수 없습니다!!!");
+                            Logs.log("마나가 부족하여 스킬을 사옹할 수 없습니다!!!");
                             currentPlayer.turn=true;
                             break;
                         }else{
-                            System.out.println("어떤 스킬을 사용하시겠습니까?");
-                            sk.skillchoice(currentPlayer);
-                            System.out.println("누구를 공격하시겠습니까?");
+                            Logs.log("어떤 스킬을 사용하시겠습니까?");
+                            sk.skillchoice(currentPlayer);//스킬 선택
+                            Logs.log("누구를 공격하시겠습니까?");
                             for(int i = 0; i<monsters.randmonsters;i++){ // 몬스터 리스트 출력
                                 if(monsters.appearmonster[i].HP<=0){
                                     System.out.println("-- 사망 --");
@@ -219,18 +220,18 @@ public class Battle{
                         }
                         
                     case 3 : if(player.run()){ //도망치기
-                            System.out.println("무사히 도망치셨습니다!");
+                            Logs.log("무사히 도망치셨습니다!");
                             System.exit(0);
                             } else{
-                                System.out.println("안타깝게도 실패하셨습니다!");
+                                Logs.log("안타깝게도 실패하셨습니다!");
                                 break;
                             }
-                    case 4 : System.out.println("누구의 정보를 확인할까요?"); // 정보확인
+                    case 4 : Logs.log("누구의 정보를 확인할까요?"); // 정보확인
                             
                             dl.Sleep();
-                            System.out.println("1. 파티원");
+                            Logs.log("1. 파티원");
                             dl.Sleep();
-                            System.out.println("2. 몬스터");
+                            Logs.log("2. 몬스터");
                             System.out.print(">> ");
                             int choices = sc.nextInt();
                             
@@ -241,27 +242,27 @@ public class Battle{
                                 case 2 : monsters.MonsterInfo();
                                         currentPlayer.turn=true;
                                         break;
-                                default : System.out.println("잘못된 선택지입니다!");
+                                default : Logs.log("잘못된 선택지입니다!");
                                         currentPlayer.turn=true;
                                         break;
                             }
                         break;
-                    default:    System.out.println("잘못된 선택지입니다!");
+                    default:    Logs.log("잘못된 선택지입니다!");
                                 currentPlayer.turn=true;
                             break;
                     }
                 } catch (InputMismatchException e) {
                     sc = new Scanner(System.in);
-                    System.out.println("잘못된 선택지입니다!");
+                    Logs.log("잘못된 선택지입니다!");
                     dl.Sleep();
                     PlayerAttack(currentPlayer);
                 }
             
     }
 
-    public void Next() throws Exception{   
+    public void Next() throws Exception{//승리시 다음 스테이지로
         if(stage<5){
-            System.out.println("다음 스테이지로 가시겠습니까?");
+            Logs.log("다음 스테이지로 가시겠습니까?");
             System.out.println("1. 계속하기");
             System.out.println("2. 게임 종료");
             int choice = sc.nextInt();
@@ -269,63 +270,70 @@ public class Battle{
             switch(choice){
                 case 1 : 
                         stage++;
-                        System.out.println(stage + " 스테이지로 이동");
+                        Logs.log(stage + " 스테이지로 이동");
                         battlefight();
                         break;
                 case 2 : 
                         System.exit(0);
                         break;
                 default : 
-                        System.out.println("1, 2 중에서 선택해주세요!!");
+                        Logs.log("1, 2 중에서 선택해주세요!!");
                         dl.Sleep();
                         Next();
                         break;
             }
         }else{
-            System.out.println("모든 스테이지를 클리어하셨습니다!");
+            Logs.log("모든 스테이지를 클리어하셨습니다!");
         }
         
     }
 
-    public boolean Restart() throws Exception{   
-            
-            System.out.println("다시 시작하시겠습니까?");
-            System.out.println("1. 다시 시작");
-            System.out.println("2. 게임 종료");
-            int choice = sc.nextInt();
-            System.out.print(">> ");
-            switch(choice){
-                case 1 : 
+    public void Restart() throws Exception{//패배시 다시 시작
+            try {
+                Logs.log("다시 시작하시겠습니까?");
+                System.out.println("1. 다시 시작");
+                System.out.println("2. 게임 종료");
+                int choice = sc.nextInt();
+                System.out.print(">> ");
+                switch(choice){
+                    case 1 : 
                         result = true;
                         break;
-                case 2 : 
+                    case 2 : 
                         result = false;
                         System.exit(0);
                         break;
-                default : 
-                        System.out.println("1, 2 중에서 선택해주세요!!");
+                    default : 
+                        Logs.log("1, 2 중에서 선택해주세요!!");
                         dl.Sleep();
-                        Next();
+                        Restart();
                         break;
             }
-            return result;
+            } catch (InputMismatchException e) {
+                sc = new Scanner(System.in);
+                Logs.log("잘못된 선택지입니다!");
+                dl.Sleep();
+                Restart();
+            }
+            
     }
 
 
     public void battlefight() throws Exception {
-            fight_start();
-            LinkedList<Unit> speedlist = unitspeed();
-            System.out.println( "====Round" + round + "====");
-            while(!win() && !lose()){
-                turn(speedlist);
-                round++;
-            }
-            fight_end();
-            if(win()){
-                round = 1;
-                Next();
-            }else if(lose()){
-                Restart();
-            }
+        int round = 1;
+        fight_start();
+        LinkedList<Unit> speedlist = unitspeed();
+        Logs.log( "====Round" + round + "====");
+        while(!win() && !lose()){
+            turn(speedlist);
+            round++;
+        }
+        fight_end();
+        if(win()){
+            round = 1;
+            Next();
+        }else if(lose()){
+            Restart();
+        }
     }
 }

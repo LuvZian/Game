@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import etc.Delay;
 import etc.GameManager;
+import etc.Logs;
 
 public class Skill {
     Scanner sc = new Scanner(System.in);
@@ -34,12 +35,12 @@ public class Skill {
     
     public void SkillInfo(Player player) throws Exception{
         Skill[] skills = GM.getskill(player.id);
-        System.out.println("===스킬 정보===");
+        Logs.log("===스킬 정보===");
         for(int i = 0; i<skills.length; i++){
-            System.out.println("● 이름 : "+skills[i].name);
-            System.out.println("● 공격력 : "+skills[i].power);
-            System.out.println("● MP : "+skills[i].mp);
-            System.out.println("● 속성 : "+skills[i].nature);
+            Logs.log("● 이름 : "+skills[i].name);
+            Logs.log("● 공격력 : "+skills[i].power);
+            Logs.log("● MP : "+skills[i].mp);
+            Logs.log("● 속성 : "+skills[i].nature);
         }
     }
 
@@ -52,32 +53,32 @@ public class Skill {
         int choiceskill = sc.nextInt();
         if(1<=choiceskill && choiceskill<=GM.skill_count){
             selectedSkill = skills[choiceskill-1];
-            System.out.println(selectedSkill.name+"을 선택하셨습니다!");
+            Logs.log(selectedSkill.name+"을 선택하셨습니다!");
         }
         return selectedSkill;
     }
 
     public int skillattack(Player player, Monster monster){
-        System.out.println(player.name + "가 "+ monster.name+"에게 "+selectedSkill.name+ "을 사용했다!");
+        Logs.log(player.name + "가 "+ monster.name+"에게 "+selectedSkill.name+ "을 사용했다!");
         dl.Sleep();
             damage = selectedSkill.power-monster.defense;
         if(damage >= monster.HP){
-            System.out.println(player.name + "가 " + monster.HP + "의 데미지를 입혔다.");
+            Logs.log(player.name + "가 " + monster.HP + "의 데미지를 입혔다.");
             monster.HP = 0;
             dl.Sleep();
-            System.out.println(monster.name + "의 남은 체력 :  " + monster.HP);
+            Logs.log(monster.name + "의 남은 체력 :  " + monster.HP);
             dl.Sleep();
-            System.out.println(monster.name + "을 쓰러트렸습니다!");
-            System.out.println("------------------------------------------------------------");
+            Logs.log(monster.name + "을 쓰러트렸습니다!");
+            Logs.log("------------------------------------------------------------");
         }else if(damage<=0){
-            System.out.println(player.name+"은 "+monster.name+"에게 흠집도 내지 못했다!");
+            Logs.log(player.name+"은 "+monster.name+"에게 흠집도 내지 못했다!");
         }
         else{
-            System.out.println(player.name + "가 " + damage + "의 데미지를 입혔다.");
+            Logs.log(player.name + "가 " + damage + "의 데미지를 입혔다.");
             dl.Sleep();
             monster.HP = monster.HP - damage;
-            System.out.println(monster.name + "의 남은 체력 :  " + monster.HP);
-            System.out.println("------------------------------------------------------------");
+            Logs.log(monster.name + "의 남은 체력 :  " + monster.HP);
+            Logs.log("------------------------------------------------------------");
         }
         return monster.HP;
     }

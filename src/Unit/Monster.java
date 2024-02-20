@@ -3,6 +3,8 @@ package Unit;
 
 import java.util.Scanner;
 
+import etc.Logs;
+
 public class Monster extends Unit{
     Scanner sc = new Scanner(System.in);
     public int randmonsters = 0;
@@ -25,18 +27,19 @@ public class Monster extends Unit{
 
 
     public void Info(Monster monster) {
-        System.out.println("● 이름 : "+monster.name);
-        System.out.println("● 공격력 : "+monster.power);
-        System.out.println("● 방어력 : "+monster.defense);
-        System.out.println("● 체력 : "+monster.HP);
-        System.out.println("● 속도 : "+monster.speed);
-        System.out.println("● 속성 :"+ monster.nature);
+        Logs.log("===+"+monster.name+" 정보===");
+        Logs.log("● 이름 : "+monster.name);
+        Logs.log("● 공격력 : "+monster.power);
+        Logs.log("● 방어력 : "+monster.defense);
+        Logs.log("● 체력 : "+monster.HP);
+        Logs.log("● 속도 : "+monster.speed);
+        Logs.log("● 속성 :"+ monster.nature);
     }
 
     public void appear(){ // 몬스터 출현
         randmonsters = (int)(Math.random()*3)+3; // 몬스터 마리수 (3~5)
         appearmonster = new Monster[randmonsters]; // 나타난 몬스터 배열
-        System.out.println(randmonsters+"마리 몬스터가 나타났다");
+        Logs.log(randmonsters+"마리 몬스터가 나타났다");
         dl.Sleep();
         for(int i = 0; i<randmonsters; i++){
             appearmonster[i] = randommonster(); //나타난 몬스터 객체 생성
