@@ -1,62 +1,45 @@
 package Unit;
 
+import java.util.List;
 import java.util.Scanner;
 
 import etc.Logs;
 
 public class Player extends Unit{
-    public Skill[] skills;
-    public Player targetplayerIndex;
+    public List<Skill> skills;
+    
     Scanner sc = new Scanner(System.in);
     Skill sk = new Skill();
+
+    public String grade;
 
     public Player() {
     }
 
-    public Player(String id, String name, int power, int defense, int HP, int MP, int speed){
+    public Player(String id, String name, int power, int defense, int HP, int MP, int speed, String grade){
         super(id, name, power, defense, HP, MP, speed);
+        this.grade = grade;
     }
 
-    public Skill[] getskills(){
+    public List<Skill> getSkills(){
         return skills;
     }
-    public void setskills(Skill[] skills){
-        this.skills = skills;
+    public void setSkills(List<Skill> list){
+        this.skills = list;
     }
 
-    public boolean run(){
-        if(Math.random()<=0.7){
-            return true;
+    public void run(){
+        if(Math.random()<=0.5){
+            Logs.log("무사히 도망치셨습니다!");
+            System.exit(0);
         }else{
-            return false;
+            Logs.log("안타깝게도 실패하셨습니다!");
+            Logs.log("------------------------------------------------------------");
         }
     }
 
-    public void Info(Player player) throws Exception {
-        Logs.log("===+"+player.name+" 정보===");
-        Logs.log("● 이름 : "+player.name);
-        Logs.log("● 공격력 : "+player.power);
-        Logs.log("● 방어력 : "+player.defense);
-        Logs.log("● 체력 : "+player.HP);
-        Logs.log("● 마나 : "+player.MP);
-        Logs.log("● 속도 : "+player.speed);
-            sk.SkillInfo(player);
-    }
-
-    public void PartyInfo() throws Exception{ //  파티원 정보
-        for(int i = 0; i < GM.selectedplayer.length;i++){
-            if(GM.selectedplayer[i].HP <= 0){
-                System.out.println("===사망===");
-            }else{
-                System.out.println((i+1)+". " + GM.selectedplayer[i].name);
-            }
-        }
-            System.out.print(">> ");
-            int choice = sc.nextInt();
-            if(1<=choice && choice<=GM.selectedplayer.length){
-                targetplayerIndex = GM.selectedplayer[choice-1];
-                Info(targetplayerIndex);
-            }
+    public void info(Player player) throws Exception {
+            super.info(player);
     }
     
 }

@@ -4,11 +4,11 @@ import java.io.*;
 import java.nio.file.Files;
 
 public class Logs { // 로그 파일 저장
-    private static final String Filename_pre = "game_log";
-    private static final String Filename_exten = ".log";
-    private static final String File_seper = "_";
+    private static final String FILENAME_PRE = "game_log";
+    private static final String FILENAME_EXTEN = ".log";
+    private static final String FILE_SEPER = "_";
     public static int FileNum = 1;
-    private static String filename = Filename_pre + File_seper + FileNum + Filename_exten;
+    private static String filename = FILENAME_PRE + FILE_SEPER + FileNum + FILENAME_EXTEN;
     
     public static void log(String msg) { // 로그파일 생성 및 작성
         try{
@@ -22,7 +22,7 @@ public class Logs { // 로그 파일 저장
         File file = new File(filename);
         while(file.exists()){
             FileNum++;
-            filename = Filename_pre + File_seper + FileNum + Filename_exten;
+            filename = FILENAME_PRE + FILE_SEPER + FileNum + FILENAME_EXTEN;
             file = new File(filename);
         }
         return filename;
