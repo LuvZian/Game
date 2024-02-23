@@ -13,7 +13,7 @@ public class Start {
         New();
     }
     
-    public void New(){
+    public void New(){ // 게임 시작 script 출력
         Logs.log("=== RPG Game ===");
             GM.sleep();
             System.out.println("1. 게임 시작 ");

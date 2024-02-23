@@ -130,7 +130,7 @@ public class Battle{
         }
     }
 
-    public void printPlayer(){
+    public void printPlayer(){//플레이어 리스트 출력
         for(int i = 0; i < GM.selectedPlayer.length;i++){
             if(GM.selectedPlayer[i].HP <= 0){
                 System.out.println((i+1)+". " + GM.selectedPlayer[i].name + " (사망)");
@@ -327,7 +327,7 @@ public class Battle{
         }
     }
 
-    public void skillSelect(Player currentPlayer) throws Exception{
+    public void skillSelect(Player currentPlayer) throws Exception{ // 스킬 nature 확인
         Skill selectedSkill = sk.skillchoice(currentPlayer);
             if(selectedSkill != null){
                 if(selectedSkill.nature.equals("heal")){
@@ -354,7 +354,7 @@ public class Battle{
             }
     }
 
-    public void playerAttack(Player currentPlayer) throws Exception{
+    public void playerAttack(Player currentPlayer) throws Exception{//플레이어 turn 공격
             Logs.log("어떤 행동을 취할까요?");
             System.out.println("1. 일반 공격");
             System.out.println("2. 스킬 사용");
@@ -471,7 +471,7 @@ public class Battle{
             }
     }
 
-    public void allReturnState(){ //라운드 종료시 체력 회복
+    public void allReturnState(){ //라운드 종료시 버프 해제 및 체력,마나 회복
         for(int i = 0; i<GM.selectedPlayer.length;i++){
             if(GM.selectedPlayer[i].HP!=0){
                 GM.selectedPlayer[i].name = GM.selectedPlayer[i].originalName;

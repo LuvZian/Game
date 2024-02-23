@@ -27,7 +27,7 @@ public class GameManager {
     public Monster monsters;
     public Player[] selectedPlayer;
 
-    public void connect(){
+    public void connect(){ //DB연결
         try{
             String url = "jdbc:mysql://127.0.0.1:3306/game_db";
             String user = "root";
@@ -41,7 +41,7 @@ public class GameManager {
         }
     }
 
-    public void close(){
+    public void close(){ //DB 연결 해제
         try {
             if(conn != null){
                 conn.close();
@@ -52,7 +52,7 @@ public class GameManager {
         }
     }
 
-    public List<Monster> getMonster() throws Exception{
+    public List<Monster> getMonster() throws Exception{ // 몬스터 데이터
         String query = "Select * FROM monster_db";
         PreparedStatement infopstmt = conn.prepareStatement(query);
         ResultSet rs = infopstmt.executeQuery();
@@ -92,7 +92,7 @@ public class GameManager {
         return playerList;
     }
 
-    public void sleep(){
+    public void sleep(){//스크립트 딜레이
         try{
             Thread.sleep(100);
         }catch(InterruptedException e){

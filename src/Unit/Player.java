@@ -28,7 +28,7 @@ public class Player extends Unit{
         this.skills = list;
     }
 
-    public void run(){
+    public void run(){ //도망치기
         if(Math.random()<=0.5){
             Logs.log("무사히 도망치셨습니다!");
             System.exit(0);
@@ -38,7 +38,7 @@ public class Player extends Unit{
         }
     }
 
-    public void info(Player player) throws Exception {
+    public void info(Player player) throws Exception { //플레이어 정보
             super.info(player);
     }
     

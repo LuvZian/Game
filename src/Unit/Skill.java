@@ -45,7 +45,7 @@ public class Skill {
             Logs.log("\n");
         }
     }
-    public Skill skillchoice(Player player) throws Exception{
+    public Skill skillchoice(Player player) throws Exception{//사용할 스킬 선택
         List<Skill> skills = GM.getSkill(player.id);
             try {
                 for(int i = 0; i<skills.size(); i++){
@@ -72,7 +72,7 @@ public class Skill {
         return selectedSkill;
     }
 
-    public int skillAttack(Player player, Monster monster){
+    public int skillAttack(Player player, Monster monster){//attack 스킬 사용
         Logs.log(player.name + "가 "+ monster.name+"에게 "+selectedSkill.name+ "을 사용했다!");
         GM.sleep();
         damage = selectedSkill.power-monster.defense;
@@ -96,12 +96,12 @@ public class Skill {
         }
         return monster.HP;
     }
-    public int restMp(Player player){
+    public int restMp(Player player){ //스킬 사용 후 남은 mp 계산
         player.MP = player.MP-selectedSkill.mp;
         return player.MP;
     }
 
-    public int skillHeal(Player Healer, Player player){
+    public int skillHeal(Player Healer, Player player){// Heal 스킬 사용
         
         GM.sleep();
         int heal = selectedSkill.power;
@@ -133,7 +133,7 @@ public class Skill {
         }
         return player.HP;
     }
-    public void run(Player player){
+    public void run(Player player){//run 스킬 사용
         Logs.log(player.name+"가"+selectedSkill.name+"을 시전했다!");
         if(Math.random()<=0.8){
             Logs.log("무사히 도망치셨습니다!");
@@ -144,16 +144,15 @@ public class Skill {
         }
     }
 
-    public void selfbuff(Player player) throws Exception{
+    public void selfbuff(Player player) throws Exception{ //selfbuff 사용
         Logs.log(player.name + "가 " + selectedSkill.name+"을 시전했다!");
-        player.HP += 50;
-        player.power += 50;
-        player.defense +=50;
-        player.speed +=2;
+        player.HP += selectedSkill.power;
+        player.power += selectedSkill.power;
+        player.defense +=selectedSkill.power;
         player.info(player);
     }
 
-    public void splash(Player player, Monster monsters[]){
+    public void splash(Player player, Monster monsters[]){ //splash 스킬 사용
         Logs.log(player.name+"가" + selectedSkill.name+"을 시전했다!");
         Logs.log("모든 적에게 "+selectedSkill.power+"의 데미지가 들어갔다!");
 
@@ -166,7 +165,7 @@ public class Skill {
         }
     }
 
-    public void resurrection(Player Healer, Player Dead){
+    public void resurrection(Player Healer, Player Dead){//resurrection 스킬 사용
         Logs.log(Healer.name + "가 "+ Dead.name+"에게 "+selectedSkill.name+ "을 사용했다!");
         if(Dead.HP >0){
             Logs.log("죽지 않은 사람에게는 시전할 수 없습니다!");
@@ -177,7 +176,7 @@ public class Skill {
         }
     }
     
-    public void special(Player player, Monster monster){
+    public void special(Player player, Monster monster){ //special 스킬 사용
         if(Math.random()<=0.404){
             Logs.log("크리티컬!");
             selectedSkill.power = selectedSkill.power*404;
@@ -185,7 +184,7 @@ public class Skill {
         }
     }
 
-    public int minMp(Player player) throws Exception{
+    public int minMp(Player player) throws Exception{//플레이어 스킬 중 가장 소모값이 적은 스킬 출력
         int minMp = 0;
         List<Skill> skills = GM.getSkill(player.id);
         LinkedList<Skill> skillMp = new LinkedList<Skill>();

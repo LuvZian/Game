@@ -41,11 +41,11 @@ public class Unit {
         this.originalName = name;
     }
 
-    public void focus(String target){
+    public void focus(String target){ //목표 설정 출력
         Logs.log(target + "을 목표로 잡았다!");
     }
 
-    public int normalattack(Unit attack, Unit defence){
+    public int normalattack(Unit attack, Unit defence){ // 일반공격
         Logs.log(attack.name + "가 "+ defence.name+ "을 공격했다!");
         GM.sleep();
         if(attack.power >= defence.HP){
@@ -69,7 +69,7 @@ public class Unit {
         return defence.HP;
     }
 
-    public void info(Unit unit) {
+    public void info(Unit unit) { // 유닛 정보 출력 
         Logs.log("==="+unit.name+" 정보===");
         Logs.log("● 이름 : "+unit.name);
         Logs.log("● 공격력 : "+unit.power);
