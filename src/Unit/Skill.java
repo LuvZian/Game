@@ -75,7 +75,6 @@ public class Skill {
     public int skillAttack(Player player, Monster monster){
         Logs.log(player.name + "가 "+ monster.name+"에게 "+selectedSkill.name+ "을 사용했다!");
         GM.sleep();
-        
         damage = selectedSkill.power-monster.defense;
         if(damage >= monster.HP){
             Logs.log(player.name + "가 " + monster.HP + "의 데미지를 입혔다.");
@@ -175,6 +174,14 @@ public class Skill {
         }else{
             Dead.HP = Dead.originalHP;
             Logs.log(Dead.name + "을 부활시키셨습니다!");
+        }
+    }
+    
+    public void special(Player player, Monster monster){
+        if(Math.random()<=0.404){
+            Logs.log("크리티컬!");
+            selectedSkill.power = selectedSkill.power*404;
+        }else{
         }
     }
 

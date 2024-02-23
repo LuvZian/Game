@@ -20,13 +20,13 @@ public class Battle{
     Monster monster;
     Player player;
 
-    public Player targetPlayerIndex;
-    public Player selectedPlayerIndex;
-    public Monster[] appearMonster;
-    public Monster selectedMonsterIndex;
-    public int randMonster = 0;
-    int stage = 1;
-    public boolean result = false;
+    public Player targetPlayerIndex; // 몬스터에게 타겟이 된 플레이어
+    public Player selectedPlayerIndex; // 플레이어에게 타겟이 된 플레이어
+    public Monster[] appearMonster; // 나타난 몬스터
+    public Monster selectedMonsterIndex; // 플레이어에게 타겟이 된 몬스터
+    public int randMonster = 0; // 몬스터 마리수
+    int stage = 1; //스테이지
+    public boolean result = false; 
 
     public Battle(){
         this.monster = new Monster();
@@ -49,7 +49,7 @@ public class Battle{
         return true;
     }
 
-    public void fightStart(){
+    public void fightStart(){ //전투시작 스크립트 출력
         Logs.log("-전투 시작-");
         GM.sleep();
         Logs.log("=== "+stage+" Stage ===");
@@ -57,7 +57,7 @@ public class Battle{
         
     }
 
-    public void fightEnd() throws Exception{
+    public void fightEnd() throws Exception{ // 전투종료 스크립트 출력
         Logs.log("전투 종료! 수고하셨습니다!");
         if(win()==true){
             Logs.log("플레이어의 승리!");
@@ -140,7 +140,7 @@ public class Battle{
         }
     }
 
-    public void MonsterInfo(){ // 몬스터 정보 확인
+    public void monsterInfo(){ // 몬스터 정보 확인
         printMonster();
           System.out.print(">> ");
           sc = new Scanner(System.in);
@@ -162,7 +162,7 @@ public class Battle{
             }
     }
 
-    public void attackchoice(Player currentPlayer){ // 몬스터 선택 및 공격
+    public void attackChoice(Player currentPlayer){ // 몬스터 선택 및 일반 공격 메소드 호출
         System.out.print(">> ");
         sc = new Scanner(System.in);
         int choice = sc.nextInt();
@@ -185,27 +185,27 @@ public class Battle{
         }
     }
 
-    public LinkedList<Unit> unitspeed(){ // 스피드 비교 linkedlist 생성, 내림차순 정렬
-        LinkedList<Unit> unitspeed = new LinkedList<Unit>();
+    public LinkedList<Unit> unitSpeed(){ // 스피드 비교 linkedlist 생성, 내림차순 정렬
+        LinkedList<Unit> unitSpeed = new LinkedList<Unit>();
         int maxIndex = Math.max(randMonster, GM.selectedPlayer.length);
 
         for(int i=0; i<maxIndex;i++){
             if(i < randMonster && appearMonster[i].HP >0){
-                unitspeed.add(appearMonster[i]);
+                unitSpeed.add(appearMonster[i]);
             }
             if(i<GM.selectedPlayer.length && GM.selectedPlayer[i].HP > 0){
-                unitspeed.add(GM.selectedPlayer[i]);
+                unitSpeed.add(GM.selectedPlayer[i]);
             }
         }  
-        Collections.sort(unitspeed,new Comparator<Unit>() {  
+        Collections.sort(unitSpeed,new Comparator<Unit>() {  
             public int compare(Unit a, Unit b){
                 return b.speed - a.speed;
             }
         });
-        return unitspeed;
+        return unitSpeed;
     }
 
-    public void upgrade(Player upgradePlayer){
+    public void upgrade(Player upgradePlayer){ // 특수 유닛
         if(upgradePlayer.id.equals("C5") && upgradePlayer.grade.equals("special")){
             if(Math.random()<=0.404){
                 upgradePlayer.grade = "normal";
@@ -227,21 +227,21 @@ public class Battle{
             unit.turn = false;
             currentMonster = (Monster) unit;
             Logs.log(currentMonster.name+"의 턴입니다!");
-            MonsterAttack(currentMonster);
+            monsterAttack(currentMonster);
         } else if (unit instanceof Player) {
             unit.turn = false;
             currentPlayer = (Player) unit;
             upgrade(currentPlayer);
             Logs.log(currentPlayer.name+"의 턴입니다!"); 
             try {
-                PlayerAttack(currentPlayer);
+                playerAttack(currentPlayer);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void Skillattackchoice(Player currentPlayer){ // 몬스터 선택 및 공격
+    public void skillAttackChoice(Player currentPlayer){ // 몬스터 선택 및 스킬 공격
             Logs.log("누구를 공격하시겠습니까?");
             printMonster();
             System.out.print(">> ");
@@ -312,13 +312,13 @@ public class Battle{
         }
     }
 
-    public void MonsterAttack(Monster currentMonster){ //몬스터 공격 시 , playerattack과 달리 선택지가 존재 X
+    public void monsterAttack(Monster currentMonster){ //몬스터 공격 시 , playerattack과 달리 선택지가 존재 X
         int randomplayer =(int)(Math.random()*GM.selectedPlayer.length);
         targetPlayerIndex = GM.selectedPlayer[randomplayer];
         if(targetPlayerIndex.HP <=0){
             Logs.log(currentMonster.name+"가 실수했다!");
             GM.sleep();
-            Logs.log("----------------------------------------------------------  --");
+            Logs.log("------------------------------------------------------------");
         }else{
             currentMonster.focus(targetPlayerIndex.name);
             GM.sleep();
@@ -327,7 +327,34 @@ public class Battle{
         }
     }
 
-    public void PlayerAttack(Player currentPlayer) throws Exception{
+    public void skillSelect(Player currentPlayer) throws Exception{
+        Skill selectedSkill = sk.skillchoice(currentPlayer);
+            if(selectedSkill != null){
+                if(selectedSkill.nature.equals("heal")){
+                    skillHealchoice(currentPlayer);
+                }else if(selectedSkill.nature.equals("Run")){
+                    sk.run(currentPlayer);
+                    currentPlayer.MP =sk.restMp(currentPlayer);
+                }else if(selectedSkill.nature.equals("selfbuff")){
+                    sk.selfbuff(currentPlayer);
+                    currentPlayer.MP =sk.restMp(currentPlayer);
+                }else if(selectedSkill.nature.equals("splash")){
+                    sk.splash(currentPlayer, appearMonster);
+                    currentPlayer.MP =sk.restMp(currentPlayer);
+                }else if(selectedSkill.nature.equals("resurrection")){
+                    skillResurrChoice(currentPlayer);
+                    currentPlayer.MP =sk.restMp(currentPlayer);
+                }else if(selectedSkill.nature.equals("special")){
+                    sk.special(currentPlayer, selectedMonsterIndex);
+                    skillAttackChoice(currentPlayer);
+                }
+                else{
+                    skillAttackChoice(currentPlayer);
+                }
+            }
+    }
+
+    public void playerAttack(Player currentPlayer) throws Exception{
             Logs.log("어떤 행동을 취할까요?");
             System.out.println("1. 일반 공격");
             System.out.println("2. 스킬 사용");
@@ -341,7 +368,7 @@ public class Battle{
                     case 1 : 
                         Logs.log("누구를 공격하시겠습니까?"); // 일반공격
                         printMonster();
-                        attackchoice(currentPlayer); // 공격할 몬스터 선택 및 공격격
+                        attackChoice(currentPlayer); // 공격할 몬스터 선택 및 공격격
                         break;
                     case 2 : if(currentPlayer.MP<sk.minMp(currentPlayer)){//그 플레이어의 스킬 중 가장 낮은 MP 소모량
                             Logs.log("마나가 부족하여 스킬을 사옹할 수 없습니다!!!");
@@ -349,28 +376,7 @@ public class Battle{
                             break;
                         }else{
                             Logs.log("어떤 스킬을 사용하시겠습니까? (현재 MP : "+currentPlayer.MP+")");
-                            Skill selectedSkill = sk.skillchoice(currentPlayer);
-                            if(selectedSkill != null){
-                                if(selectedSkill.nature.equals("heal")){
-                                    skillHealchoice(currentPlayer);
-                                }else if(selectedSkill.nature.equals("Run")){
-                                    sk.run(currentPlayer);
-                                    currentPlayer.MP =sk.restMp(currentPlayer);
-                                }else if(selectedSkill.nature.equals("selfbuff")){
-                                    sk.selfbuff(currentPlayer);
-                                    currentPlayer.MP =sk.restMp(currentPlayer);
-                                }else if(selectedSkill.nature.equals("splash")){
-                                    sk.splash(currentPlayer, appearMonster);
-                                    currentPlayer.MP =sk.restMp(currentPlayer);
-                                }else if(selectedSkill.nature.equals("resurrection")){
-                                    skillResurrChoice(currentPlayer);
-                                    currentPlayer.MP =sk.restMp(currentPlayer);
-                                }
-                                else{
-                                    Skillattackchoice(currentPlayer);
-                                }
-                            }
-                            
+                            skillSelect(currentPlayer);
                             break;
                         }
                         
@@ -389,7 +395,7 @@ public class Battle{
                                 case 1: partyInfo();
                                         currentPlayer.turn=true;
                                         break;
-                                case 2 : MonsterInfo();
+                                case 2 : monsterInfo();
                                         currentPlayer.turn=true;
                                         break;
                                 default : Logs.log("잘못된 선택지입니다!");
@@ -404,7 +410,7 @@ public class Battle{
                 } catch (InputMismatchException e) {
                     Logs.log("잘못된 선택지입니다!");
                     GM.sleep();
-                    PlayerAttack(currentPlayer);
+                    playerAttack(currentPlayer);
                 }
     }
 
@@ -465,32 +471,46 @@ public class Battle{
             }
     }
 
-    public void battlefight() throws Exception {
+    public void allReturnState(){ //라운드 종료시 체력 회복
+        for(int i = 0; i<GM.selectedPlayer.length;i++){
+            if(GM.selectedPlayer[i].HP!=0){
+                GM.selectedPlayer[i].name = GM.selectedPlayer[i].originalName;
+                GM.selectedPlayer[i].power = GM.selectedPlayer[i].originalPower;
+                GM.selectedPlayer[i].defense = GM.selectedPlayer[i].originalDefense;
+                GM.selectedPlayer[i].HP = GM.selectedPlayer[i].originalHP;
+                GM.selectedPlayer[i].MP = GM.selectedPlayer[i].originalMP;
+                GM.selectedPlayer[i].speed = GM.selectedPlayer[i].originalSpeed;
+            }    
+        }
+    }
+
+    public void battlefight() throws Exception { // 전투 진행
         int round = 1;
         fightStart();
-        LinkedList<Unit> speedlist = new LinkedList<>();
+        LinkedList<Unit> speedList = new LinkedList<>();
         while(!win() && !lose()){
-            if (speedlist.size() == 0) {
+            if (speedList.size() == 0) {
                 Logs.log( "====Round" + round + "====");
-                speedlist = unitspeed();
-                for(int i = 0; i<speedlist.size();i++){
-                    if(speedlist.get(i).HP*1.2>speedlist.get(i).originalHP){
-                        speedlist.get(i).HP = speedlist.get(i).originalHP;
+                speedList = unitSpeed();
+                for(int i = 0; i<speedList.size();i++){
+                    if(speedList.get(i).HP*1.2>speedList.get(i).originalHP){
+                        speedList.get(i).HP = speedList.get(i).originalHP;
                     }else{
-                        speedlist.get(i).HP = (int) (speedlist.get(i).HP*1.2);
+                        speedList.get(i).HP = (int) (speedList.get(i).HP*1.2);
                     }
                 }
                 round++;
+                allReturnState();
             }
-            Unit turnUnit = speedlist.get(0);
+            Unit turnUnit = speedList.get(0);
 
             turn(turnUnit);
             if (!turnUnit.turn || turnUnit.HP<=0) {
-                speedlist.remove(0);
+                speedList.remove(0);
             }
-            for(int i = 0; i<speedlist.size();i++){
-                if(speedlist.get(i).HP <=0){
-                    speedlist.remove(i);
+            for(int i = 0; i<speedList.size();i++){
+                if(speedList.get(i).HP <=0){
+                    speedList.remove(i);
                 }
             }   
         }

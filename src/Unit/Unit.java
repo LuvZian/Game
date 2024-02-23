@@ -13,9 +13,13 @@ public class Unit {
     public int HP;
     public int MP;
     public int speed;
-    public Boolean turn = true; 
+    public Boolean turn = true;
+    public String originalName; 
     public int originalHP;
     public int originalMP;
+    public int originalPower;
+    public int originalDefense;
+    public int originalSpeed;
 
     public Unit(){
         
@@ -31,6 +35,10 @@ public class Unit {
         this.speed = speed;
         this.originalHP = HP;
         this.originalMP = MP;
+        this.originalPower = power;
+        this.originalDefense = defense;
+        this.originalSpeed = speed;
+        this.originalName = name;
     }
 
     public void focus(String target){
@@ -71,6 +79,7 @@ public class Unit {
             Logs.log("● 마나 : "+unit.MP+"/"+unit.originalMP);
         }
         Logs.log("● 속도 : "+unit.speed);
+        Logs.log("===============================");
         
     }
 }

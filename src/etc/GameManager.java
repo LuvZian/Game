@@ -63,11 +63,11 @@ public class GameManager {
         return monsterList;
     }
 
-    public List<Skill> getSkill(String unit_id)throws Exception{//필요한 스킬 데이터 받아오기
+    public List<Skill> getSkill(String unitId)throws Exception{//필요한 스킬 데이터 받아오기
         skillList = new ArrayList<>();
         String skillQuery = "Select * from skillinfo where id in (select skill_id from playerskill where player_id = ?)";
         PreparedStatement pstmtSkill = conn.prepareStatement(skillQuery);
-        pstmtSkill.setString(1, unit_id);
+        pstmtSkill.setString(1, unitId);
         ResultSet rs = pstmtSkill.executeQuery();
 
         while(rs.next()){
